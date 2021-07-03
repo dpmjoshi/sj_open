@@ -1,0 +1,26 @@
+general:
+    # Start date of tournament
+    start_date: "08/14/2021"
+    # practice start date
+    practice_date: "07/10/2021"
+    # defines number of practice matches each player will play
+    max_pract_match_per_player: 2
+    name: SJ-OPEN-2021
+    num_players: 10
+    # Finalist from previous tournament
+    prev_finalist:
+    - JD
+    - AT
+    # Players those are new to the tournament or haven't won a match in previous tournament.
+    new_players: 
+    - RV
+    - AM
+    - SS
+    - TS
+    old_players:
+    - GK
+    - AK
+    - AP
+    - KL
+other:
+    location: San Jose
