@@ -27,11 +27,15 @@ There should be a config file per tournament.
     - old_players: list of players who have played tournament previously and have won at least one match.
 
 Testing:
-   tested on python3.7
+
+tested on python3.7
    
-   requires colorama to be installed "pip3 install colorama"
+   requires colorama to be installed 
+  
+     $ pip3 install colorama
 
 How to run:
-   run from command line, so that you can see colourful output.
+
+run from command line, so that you can see colourful output.
    
-   $ python3 scheduler.py
+     $ python3 scheduler.py
