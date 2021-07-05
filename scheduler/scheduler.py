@@ -1,18 +1,23 @@
 # A Python program to find out all combinations of players to play matches
 # Length is 2 for "Singles Tennis Match"
 # We will then choose a random number between 1 to 15 and that 
-from itertools import combinations 
+import sys
 import datetime
 import calendar
 import random
-from tournament_config import tournament_config
 import time
 import colorama
 from colorama import Fore, Back, Style, Cursor
-import sys
+from itertools import combinations
+
+from tournament_config import tournament_config
+from file_handler import file_handler
 
 sj_open = tournament_config("config/config_2021.yaml")
 sj_open.generate_players_dict()
+
+sj_open_files = file_handler()
+
 
 # Now let's figure out groups for the tournament
 # logic used here is 
@@ -75,6 +80,9 @@ for player_a, player_b in zip(group_a, group_b):
     print("{}".format(player_b))
     sys.stdout.flush()
     time.sleep(1)
+
+# write groups to the file
+sj_open_files.write_groups(group_a, group_b)
 
 
 # Start date for tournament (YYYY,MM,DD)
@@ -157,7 +165,11 @@ for match in practice_order:
     scheduledPracticeMatches+= 1
     if (practiceDate >= startDate):
         break
-    print ("{} |  {}  |  {} Vs {} ".format(practiceDate, matchWeekday, match[0], match[1]))
+
+    pract_schedule = "{} |  {}  |  {} Vs {} ".format(practiceDate, matchWeekday, match[0], match[1])
+    print (pract_schedule)
+    sj_open_files.write_pract_schedule(pract_schedule)
+
     matchesPerDay+=1
     prevMatch = match
 
@@ -168,15 +180,19 @@ for match in practice_order:
     if (matchesPerDay == 1):
         matchesPerDay = 0
         practiceDate += oneDay
-    
-        
+
+sj_open_files.finalize_pract_schedule()
+
 print ("")
 print ("")
 print (Fore.GREEN + "Tournament Schedule for {}".format(sj_open.name))
 print (Style.RESET_ALL)
+
+tournament_schedule_header = "   Group   |    Date    |     Day    |    Match    |   Referees  |  "
 print ("")
-print ("   Group   |    Date    |     Day    |    Match    |   Referees  |  ")
+print (tournament_schedule_header)
 print ("------------------------------------------------------------------")
+sj_open_files.write_tournament_schedule(tournament_schedule_header)
 
 lastMatchDate = startDate
 for (match_a, match_b) in zip(grp_a_order, grp_b_order):
@@ -184,12 +200,26 @@ for (match_a, match_b) in zip(grp_a_order, grp_b_order):
     matchWeekday = calendar.day_name[matchDate.weekday()]
     matchWeekday = matchWeekday.ljust(8, ' ')
     scheduledMatches+= 1
-    print (" Group A   | {} |  {}  |  {} Vs {}   |  Refs. {} and {} ".format(matchDate, matchWeekday, match_a[0], match_a[1], match_b[0], match_b[1]))
+
+    # match_a schedule
+    match_a_schedule = " Group A   | {} |  {}  |  {} Vs {}   |  Refs. {} and {} ".format(matchDate, matchWeekday, match_a[0], match_a[1], match_b[0], match_b[1])
+    print (match_a_schedule)
+    sj_open_files.write_tournament_schedule(match_a_schedule)
+
     matchDate += oneDay
     matchWeekday = calendar.day_name[matchDate.weekday()]
     matchWeekday = matchWeekday.ljust(8, ' ')    
-    print (" Group B   | {} |  {}  |  {} Vs {}   |  Refs. {} and {} ".format(matchDate, matchWeekday, match_b[0], match_b[1], match_a[0], match_a[1]))
+
+    # match_b schedule
+    match_b_schedule = " Group B   | {} |  {}  |  {} Vs {}   |  Refs. {} and {} ".format(matchDate, matchWeekday, match_b[0], match_b[1], match_a[0], match_a[1])
+
+    # print match b schedule on console
+    print (match_b_schedule)
     print ("")
+
+    # Write match b schedule to csv file
+    sj_open_files.write_tournament_schedule(match_b_schedule)
+
     lastMatchDate = matchDate
     time.sleep(0.75)
 
@@ -203,4 +233,10 @@ print("\t\t\t\t\t\t\t |")
 print(Fore.YELLOW + "2nd Semi Final | B1 vs A2  | {}   ---> Winner ----".format(semiFinalStartDate + oneDay))
 print("")
 
-# TODO: write all schedule in csv file that can be imported in google sheets.
+
+sj_open_files.write_tournament_schedule("1st Semi Final | {} |  A1 vs B2 ".format(semiFinalStartDate))
+sj_open_files.write_tournament_schedule("2nd Semi Final | {} |  B1 vs A2 ".format(semiFinalStartDate + oneDay))
+sj_open_files.write_tournament_schedule("Final Match | {}".format(semiFinalStartDate + weekDelta))
+
+
+sj_open_files.finalize_tournament_schedule()

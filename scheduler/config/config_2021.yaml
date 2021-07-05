@@ -4,7 +4,7 @@ general:
     # practice start date
     practice_date: "07/10/2021"
     # defines number of practice matches each player will play
-    max_pract_match_per_player: 2
+    max_pract_match_per_player: 1
     name: SJ-OPEN-2021
     num_players: 10
     # Finalist from previous tournament
