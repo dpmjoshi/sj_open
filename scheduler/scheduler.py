@@ -188,7 +188,7 @@ print ("")
 print (Fore.GREEN + "Tournament Schedule for {}".format(sj_open.name))
 print (Style.RESET_ALL)
 
-tournament_schedule_header = "   Group   |    Date    |     Day    |    Match    |   Referees  |  "
+tournament_schedule_header = "   Group   |    Date    |     Day    |    Match    |   Referees"
 print ("")
 print (tournament_schedule_header)
 print ("------------------------------------------------------------------")
